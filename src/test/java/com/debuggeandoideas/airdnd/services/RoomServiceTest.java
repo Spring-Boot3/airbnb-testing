@@ -6,24 +6,33 @@ import com.debuggeandoideas.airdnd.utils.DataDummy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 public class RoomServiceTest {
 
+    //El @Mock es una anotacion de Mockito que nos permite crear un objeto mock
+    @Mock
     private RoomRepository roomRepositoryMock;
+    //El @InjectMocks es una anotacion de Mockito que nos permite inyectar el mock en el objeto real
+    @InjectMocks
     private RoomService roomService;
-
-    @BeforeEach
-    void init() {
-        //Aqui inicializamos una nueva instancia de RoomRepository
-        //roomRepository = new RoomRepository();
-        //Aqui inicializamos una nueva instancia utilizando Mockito
-        //La diferencia es de que ya esto es un objeto fake
-        roomRepositoryMock = mock(RoomRepository.class);
-        roomService = new RoomService(roomRepositoryMock);
-    }
+//    This is the same as @Mock
+//    @BeforeEach
+//    void init() {
+//        //Aqui inicializamos una nueva instancia de RoomRepository
+//        //roomRepository = new RoomRepository();
+//        //Aqui inicializamos una nueva instancia utilizando Mockito
+//        //La diferencia es de que ya esto es un objeto fake
+//        roomRepositoryMock = mock(RoomRepository.class);
+//        roomService = new RoomService(roomRepositoryMock);
+//    }
 
     //The default values of Mockito are as follows:
     // 1.- List, Set, Map, ArrayList, HashMap, etc. the value is: []
