@@ -25,6 +25,13 @@ public class RoomServiceTest {
         roomService = new RoomService(roomRepositoryMock);
     }
 
+    //The default values of Mockito are as follows:
+    // 1.- List, Set, Map, ArrayList, HashMap, etc. the value is: []
+    // 2.- Integer, Long, Double, Float, etc. the value is: 0
+    // 3.- Boolean the value is: false
+    // 4.- String the value is: null
+    // 5.- Object the value is: null
+    // 6.- Void the value is: null
     @Test
     @DisplayName("Should all rooms be available in room repository")
     void findAllAvailableRooms() {
