@@ -51,15 +51,20 @@ public class BookingServiceTest {
 //                .thenReturn(DataDummy.default_rooms_list.get(0));
 //        when(bookingRepositoryMock.save(DataDummy.default_booking_req_1))
 //                .thenReturn(roomId);
-        //Arguments matcher any
-        when(roomServiceMock.findAvailableRoom(any(BookingDto.class)))
-                .thenReturn(DataDummy.default_rooms_list.get(0));
-        when(bookingRepositoryMock.save(any(BookingDto.class)))
-                .thenReturn(roomId);
-        var result = bookingService.booking(DataDummy.default_booking_req_3);
+
+//        //Arguments matcher any
+//        when(roomServiceMock.findAvailableRoom(any(BookingDto.class)))
+//                .thenReturn(DataDummy.default_rooms_list.get(0));
+//        when(bookingRepositoryMock.save(any(BookingDto.class)))
+//                .thenReturn(roomId);
+
+//      Otra forma de hacerlo es:
+        doReturn(DataDummy.default_rooms_list.get(0))
+                .when(roomServiceMock).findAvailableRoom(DataDummy.default_booking_req_1);
+        doReturn(roomId)
+                .when(bookingRepositoryMock).save(DataDummy.default_booking_req_1);
+        var result = bookingService.booking(DataDummy.default_booking_req_1);
         assertEquals(roomId, result);
 
     }
-
-
 }
