@@ -13,6 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.UUID;
@@ -27,6 +28,11 @@ public class BookingServiceTest {
     private PaymentService paymentServiceMock;
     @Mock
     private RoomService roomServiceMock;
+    //La diferencia entre @Mock y @Spy es que @Mock crea un objeto falso
+    // y @Spy crea un objeto real pero con la posibilidad de
+    // espiar los metodos de la clase real
+    //El @Spy es una anotacion de Mockito que nos permite crear un objeto espia
+    //@Spy
     @Mock
     private BookingRepository bookingRepositoryMock;
     @Mock
