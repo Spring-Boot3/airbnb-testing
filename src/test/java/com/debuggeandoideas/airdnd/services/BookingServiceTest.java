@@ -66,5 +66,9 @@ public class BookingServiceTest {
         var result = bookingService.booking(DataDummy.default_booking_req_1);
         assertEquals(roomId, result);
 
+        //Verificamos que se llamo a los metodos
+        verify(roomServiceMock,times(1)).findAvailableRoom(any(BookingDto.class));
+        verify(bookingRepositoryMock, times(1)).save(any(BookingDto.class));
+
     }
 }
