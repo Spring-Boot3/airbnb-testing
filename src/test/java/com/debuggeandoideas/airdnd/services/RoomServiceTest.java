@@ -18,17 +18,17 @@ import static org.mockito.Mockito.*;
 public class RoomServiceTest {
 
     //El @Mock es una anotacion de Mockito que nos permite crear un objeto mock
-//    @Mock
+    @Mock
     private RoomRepository roomRepositoryMock;
     //El @InjectMocks es una anotacion de Mockito que nos permite inyectar el mock en el objeto real
-//    @InjectMocks
+    @InjectMocks
     private RoomService roomService;
 
-    @BeforeEach
+    /*@BeforeEach
     void init() {
         roomRepositoryMock = spy(RoomRepository.class);
         roomService = new RoomService(roomRepositoryMock);
-    }
+    }*/
 
 //    This is the same as @Mock
 //    @BeforeEach

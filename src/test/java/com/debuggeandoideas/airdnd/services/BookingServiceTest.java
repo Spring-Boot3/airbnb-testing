@@ -16,6 +16,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -44,9 +45,22 @@ public class BookingServiceTest {
     @DisplayName("get Available Place Count should works")
     void getAvailablePlaceCount() {
         when(roomServiceMock.findAllAvailableRooms())
-                .thenReturn(DataDummy.default_rooms_list);
+                .thenReturn(DataDummy.default_rooms_list)
+                .thenReturn(DataDummy.silgle_rooms_list)
+                .thenReturn(Collections.emptyList());
+                //*.thenThrow(new IllegalStateException("Error"));*/ <-- Tambien se puede agregar excepciones a la cadena de returns
+        var expected1 = 14;
+        var expected2 = 5;
+        var expected3 = 0;
+        var result1 = bookingService.getAvailablePlaceCount();
+        var result2 = bookingService.getAvailablePlaceCount();
+        var result3 = bookingService.getAvailablePlaceCount();
 
-        assertEquals(14, bookingService.getAvailablePlaceCount());
+        assertAll(
+                () -> assertEquals(expected1, result1),
+                () -> assertEquals(expected2, result2),
+                () -> assertEquals(expected3, result3)
+        );
     }
 
     @Test
