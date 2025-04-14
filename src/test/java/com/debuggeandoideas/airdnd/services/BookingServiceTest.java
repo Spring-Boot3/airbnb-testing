@@ -10,6 +10,7 @@ import com.debuggeandoideas.airdnd.utils.DataDummy;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -43,8 +44,8 @@ public class BookingServiceTest {
     }
 
     @Test
-    @DisplayName("booking should works")
-    void booking() {
+    @DisplayName("booking happy path should works")
+    void bookingHappyPath() {
         final var roomId = UUID.randomUUID().toString();
         //Arguments matcher strict
 //        when(roomServiceMock.findAvailableRoom(DataDummy.default_booking_req_1))
@@ -76,6 +77,18 @@ public class BookingServiceTest {
         verify(roomServiceMock,times(1)).findAvailableRoom(any(BookingDto.class));
         verify(bookingRepositoryMock, times(1)).save(any(BookingDto.class));
         verify(roomServiceMock, times(1)).bookRoom(anyString());
+    }
 
+    @Test
+    @DisplayName("booking unhappy path should works")
+    void bookingUnHappyPath() {
+        final var roomId = UUID.randomUUID().toString();
+        doReturn(DataDummy.default_rooms_list.get(0))
+                .when(roomServiceMock).findAvailableRoom(DataDummy.default_booking_req_4);
+        doThrow(new IllegalArgumentException("Max 3 guests"))
+                .when(paymentServiceMock).pay(any(BookingDto.class), anyDouble());
+
+        Executable executable = () -> bookingService.booking(DataDummy.default_booking_req_4);
+        assertThrows(IllegalArgumentException.class, executable);
     }
 }
