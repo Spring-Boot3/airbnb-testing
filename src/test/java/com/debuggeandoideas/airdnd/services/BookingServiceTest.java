@@ -86,7 +86,10 @@ public class BookingServiceTest {
         doReturn(DataDummy.default_rooms_list.get(0))
                 .when(roomServiceMock).findAvailableRoom(DataDummy.default_booking_req_4);
         doThrow(new IllegalArgumentException("Max 3 guests"))
-                .when(paymentServiceMock).pay(any(BookingDto.class), anyDouble());
+                .when(paymentServiceMock).pay(eq(DataDummy.default_booking_req_4), eq(320.00));
+        //Otra forma de hacerlo es:
+        /*when(paymentServiceMock.pay(any(BookingDto.class), anyDouble()))
+                .thenThrow(new IllegalArgumentException("Max 3 guests"));*/
 
         Executable executable = () -> bookingService.booking(DataDummy.default_booking_req_4);
         assertThrows(IllegalArgumentException.class, executable);
