@@ -63,12 +63,19 @@ public class BookingServiceTest {
                 .when(roomServiceMock).findAvailableRoom(DataDummy.default_booking_req_1);
         doReturn(roomId)
                 .when(bookingRepositoryMock).save(DataDummy.default_booking_req_1);
+
+        // el doNothing es para que no haga nada y es
+        // para los metodos que no devuelven nada (void)
+        doNothing()
+                .when(roomServiceMock).bookRoom(anyString());
+
         var result = bookingService.booking(DataDummy.default_booking_req_1);
         assertEquals(roomId, result);
 
         //Verificamos que se llamo a los metodos
         verify(roomServiceMock,times(1)).findAvailableRoom(any(BookingDto.class));
         verify(bookingRepositoryMock, times(1)).save(any(BookingDto.class));
+        verify(roomServiceMock, times(1)).bookRoom(anyString());
 
     }
 }
