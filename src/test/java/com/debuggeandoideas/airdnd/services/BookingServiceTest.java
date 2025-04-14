@@ -11,12 +11,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.function.Executable;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,6 +39,11 @@ public class BookingServiceTest {
     private MailHelper mailHelperMock;
     @InjectMocks
     private BookingService bookingService;
+    //El @Captor es una anotacion de Mockito que nos permite crear un objeto captor
+    //El captor es un objeto que nos permite capturar los argumentos
+    //que se pasan a un metodo
+    @Captor
+    private ArgumentCaptor<String> stringCapture;
 
     @Test
     @DisplayName("get Available Place Count should works")
@@ -113,5 +117,43 @@ public class BookingServiceTest {
 
         Executable executable = () -> bookingService.booking(DataDummy.default_booking_req_4);
         assertThrows(IllegalArgumentException.class, executable);
+    }
+
+    @Test
+    @DisplayName("unbook should works")
+    void unbook() {
+        //given
+        var id1 = "id1";
+        var id2 = "id2";
+
+
+        var bookingRes1 = DataDummy.default_booking_req_1;
+        bookingRes1.setRoom(DataDummy.default_rooms_list.get(3));
+
+        var bookingRes2 = DataDummy.default_booking_req_2;
+        bookingRes2.setRoom(DataDummy.default_rooms_list.get(4));
+
+        //when
+        when(this.bookingRepositoryMock.findById(anyString()))
+                .thenReturn(bookingRes1)
+                .thenReturn(bookingRes2);
+
+        doNothing()
+                .when(this.roomServiceMock).unbookRoom(anyString());
+
+        doNothing()
+                .when(this.bookingRepositoryMock).deleteById(anyString());
+
+        this.bookingService.unbook(id1);
+        this.bookingService.unbook(id2);
+
+        //then
+        verify(this.roomServiceMock, times(2)).unbookRoom(anyString());
+        verify(this.bookingRepositoryMock, times(2)).deleteById(anyString());
+        verify(this.bookingRepositoryMock, times(2)).findById(this.stringCapture.capture());
+
+        System.out.println("captured argument: " + this.stringCapture.getAllValues());
+
+        assertEquals(List.of( "id1",  "id2"), this.stringCapture.getAllValues());
     }
 }
