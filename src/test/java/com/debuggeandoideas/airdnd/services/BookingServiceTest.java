@@ -95,12 +95,16 @@ public class BookingServiceTest {
         doNothing()
                 .when(roomServiceMock).bookRoom(anyString());
 
+        doNothing()
+                .when(mailHelperMock).sendMail(anyString(), anyString());
+
         var result = bookingService.booking(DataDummy.default_booking_req_1);
         assertEquals(roomId, result);
 
         //Verificamos que se llamo a los metodos
         verify(roomServiceMock,times(1)).findAvailableRoom(any(BookingDto.class));
         verify(bookingRepositoryMock, times(1)).save(any(BookingDto.class));
+        verify(mailHelperMock, times(1)).sendMail(anyString(), anyString());
         verify(roomServiceMock, times(1)).bookRoom(anyString());
     }
 
@@ -165,7 +169,6 @@ public class BookingServiceTest {
             mockedStatic.when(() -> CurrencyConverter.toMx(anyDouble()))
                     .thenReturn(expected);
             var result = bookingService.calculateInMxn(DataDummy.default_booking_req_1);
-
             assertEquals(expected, result);
         }
     }
