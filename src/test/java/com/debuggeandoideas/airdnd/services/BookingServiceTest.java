@@ -106,14 +106,13 @@ public class BookingServiceTest {
     @Test
     @DisplayName("booking unhappy path should works")
     void bookingUnHappyPath() {
-        final var roomId = UUID.randomUUID().toString();
         doReturn(DataDummy.default_rooms_list.get(0))
                 .when(roomServiceMock).findAvailableRoom(DataDummy.default_booking_req_4);
-        doThrow(new IllegalArgumentException("Max 3 guests"))
-                .when(paymentServiceMock).pay(eq(DataDummy.default_booking_req_4), eq(320.00));
+        //doThrow(new IllegalArgumentException("Max 3 guests"))
+          //      .when(paymentServiceMock).pay(eq(DataDummy.default_booking_req_4), eq(320.00));
         //Otra forma de hacerlo es:
-        /*when(paymentServiceMock.pay(any(BookingDto.class), anyDouble()))
-                .thenThrow(new IllegalArgumentException("Max 3 guests"));*/
+        when(paymentServiceMock.pay(any(BookingDto.class), anyDouble()))
+                .thenThrow(new IllegalArgumentException("Max 3 guests"));
 
         Executable executable = () -> bookingService.booking(DataDummy.default_booking_req_4);
         assertThrows(IllegalArgumentException.class, executable);
@@ -134,26 +133,26 @@ public class BookingServiceTest {
         bookingRes2.setRoom(DataDummy.default_rooms_list.get(4));
 
         //when
-        when(this.bookingRepositoryMock.findById(anyString()))
+        when(bookingRepositoryMock.findById(anyString()))
                 .thenReturn(bookingRes1)
                 .thenReturn(bookingRes2);
 
         doNothing()
-                .when(this.roomServiceMock).unbookRoom(anyString());
+                .when(roomServiceMock).unbookRoom(anyString());
 
         doNothing()
-                .when(this.bookingRepositoryMock).deleteById(anyString());
+                .when(bookingRepositoryMock).deleteById(anyString());
 
-        this.bookingService.unbook(id1);
-        this.bookingService.unbook(id2);
+        bookingService.unbook(id1);
+        bookingService.unbook(id2);
 
         //then
-        verify(this.roomServiceMock, times(2)).unbookRoom(anyString());
-        verify(this.bookingRepositoryMock, times(2)).deleteById(anyString());
-        verify(this.bookingRepositoryMock, times(2)).findById(this.stringCapture.capture());
+        verify(roomServiceMock, times(2)).unbookRoom(anyString());
+        verify(bookingRepositoryMock, times(2)).deleteById(anyString());
+        verify(bookingRepositoryMock, times(2)).findById(stringCapture.capture());
 
-        System.out.println("captured argument: " + this.stringCapture.getAllValues());
+        System.out.println("captured argument: " + stringCapture.getAllValues());
 
-        assertEquals(List.of( "id1",  "id2"), this.stringCapture.getAllValues());
+        assertEquals(List.of( "id1",  "id2"), stringCapture.getAllValues());
     }
 }
