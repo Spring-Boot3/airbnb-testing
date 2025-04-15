@@ -4,6 +4,7 @@ import com.debuggeandoideas.airdnd.Services.BookingService;
 import com.debuggeandoideas.airdnd.Services.PaymentService;
 import com.debuggeandoideas.airdnd.Services.RoomService;
 import com.debuggeandoideas.airdnd.dto.BookingDto;
+import com.debuggeandoideas.airdnd.dto.RoomDto;
 import com.debuggeandoideas.airdnd.helpers.MailHelper;
 import com.debuggeandoideas.airdnd.repositories.BookingRepository;
 import com.debuggeandoideas.airdnd.utils.CurrencyConverter;
@@ -21,6 +22,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class BookingServiceTest {
@@ -171,5 +173,20 @@ public class BookingServiceTest {
             var result = bookingService.calculateInMxn(DataDummy.default_booking_req_1);
             assertEquals(expected, result);
         }
+    }
+
+    @Test
+    void shouldCountAvailablePlace() {
+        //given
+        given(roomServiceMock.findAllAvailableRooms())
+                .willReturn(Collections.singletonList(new RoomDto("A1", 2)));
+
+        //when
+        var expected = 2;
+        var result = bookingService.getAvailablePlaceCount();
+
+        //then
+        then(roomServiceMock).should(times(1)).findAllAvailableRooms();
+        assertEquals(expected, result);
     }
 }
